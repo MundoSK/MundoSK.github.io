@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>MundoSK - Skript Addon by Tlatoani</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+<body>
+  <nav class="blue darken-1" role="navigation">
+    <div class="nav-wrapper"><a id="logo-container" href="index.html" class="brand-logo center white-text">MundoSK</a>
+      <ul id="nav-mobile" class="side-nav fixed blue darken-2">
+        <li class="no-padding">
+          <ul class="collapsible collapsible-accordion">
+            <li>
+              <a class="active collapsible-header white-text">Tutorials</i></a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="tutorialworldcreator.html">World Creator</a></li>
+                  <li><a href="tutorialinterserver.html">Server Communication</a></li>
+                  <li class="active grey lighten-3"><a href="tutorialhandlers.html" class="black-text">Handlers</a></li>
+                  <li><a href="tutorialprobability.html">Probability</a></li>
+                  <li><a href="tutorialcustomevents.html">Custom Events</a></li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <a class="collapsible-header white-text">Requirements</i></a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="https://forums.skunity.com/uploads/default/original/2X/a/af5cf8410e58cce7f76c8fc467498b32c37e2755.jar">Skript 2.2 (1.8)</a></li>
+                  <li><a href="https://forums.skunity.com/t/download-v1-3-skript-for-1-9/4283">Skript 2.2 (1.9)</a></li>
+                  <li><a>Spigot 1.8/1.9</a></li>
+                  <li><a>Java 8</a></li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <a class="collapsible-header white-text">Examples</i></a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="exampleinterserverchat.html">Inter Server Chat</a></li>
+                  <li><a href="examplemontyhall.html">Monty Hall</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </li>
+        <li><a href="http://skunity.com/MundoSK" class="white-text">Documentation</a></li>
+        <li><a href="https://github.com/TlatoaniHJ/MundoSK" class="white-text">GitHub</a></li>
+        <li><a href="https://forums.skunity.com/t/mundosk-1-5-10-custom-events-world-border-world-management-books-enchanted-books-sockets-terraincontrol-hook-more/2706" class="white-text">skUnity</a></li>
+        <li><a href="http://mcstats.org/plugin/MundoSK" class="white-text">Metrics</a></li>
+        <li><a href="reportbugs.html" class="white-text">Report Bugs</a></li>
+      </ul>
+      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons white-text">menu</i></a>
+    </div>
+  </nav>
+
+  <header id="index-banner" class="parallax-container">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <br><br>
+        <h1 class="header center green-text">Handler Tutorial</h1>
+        <div class="row center">
+          <h5 class="header col s12 light">Allows you to handle socket messages and responses</h5>
+        </div>
+      </div>
+    </div>
+    <div class="parallax"><img src="background4.jpg" alt="Unsplashed background img 1"></div>
+  </header>
+
+
+  <main>
+    <div class="section container">
+
+      <!--   Icon Section   -->
+      <div class="center row">
+<p>This is a quick guide on Function Socket Handlers and Response Handlers. Handlers are used to handle messages to function sockets as well as responses to write to socket messages.
+</p><p>Handlers are actually quite simple. First off, you open the function socket:
+</p><blockquote class="blue-grey lighten-4 left-align"><pre>open function socket at port 12345 with password "totallysafe" through function "Handler"
+</pre></blockquote><p>Or you write the message:
+</p><blockquote class="blue-grey lighten-4 left-align"><pre>write "totallysafe", "some value" to socket with host "host.com" port 12345 to handle response through function "Handler" with id "someid
+</pre></blockquote><p>Then (probably beforehand) you create the function:
+</p><blockquote class="blue-grey lighten-4 left-align"><pre>
+function Handler(args: strings, info: objects):
+  do stuff
+</pre></blockquote><p>You can send a message back to whoever sent the message. If the handler is handling a message received from a function socket, then you can simply do
+</p><blockquote class="blue-grey lighten-4 left-align"><pre>return "response"
+</pre></blockquote><p>In this case, the function must be instead written as
+</p><blockquote class="blue-grey lighten-4 left-align"><pre>function Handler(args: strings, info: objects):: strings:
+</pre></blockquote><p>If the message received is a response to a socket write effect, the you have to do
+</p><blockquote class="blue-grey lighten-4 left-align"><pre>write "totallysafe", "response" to socket with host {_info::2} port {_info::3} to handle response through function "Handler" with id "anotherid" You'll notice that we are using some arguments in our socket write effect, that's because we want to write to the same host/port that sent the response, and those arguments specify the host/port.
+</pre></blockquote><p>Here's a run-down of what each argument is:
+</p><blockquote class="blue-grey lighten-4 left-align"><pre>{_args::*}
+</pre></blockquote><p>is a list variable containing the messages received.
+</p><blockquote class="blue-grey lighten-4 left-align"><pre>{_info::*}
+</pre></blockquote><p>is a list variable containing extra information about the messages.
+</p><blockquote class="blue-grey lighten-4 left-align"><pre>{_info::1}
+</pre></blockquote><p>depends on what kind of message the Handler is handling. If this is handling a message from a server received through a function socket, then it is the port that the message was received from. If this is handling the response to a socket write message, then it is the id specified in the socket write effect.
+</p><blockquote class="blue-grey lighten-4 left-align"><pre>{_info::2}
+</pre></blockquote><p>is either the hostname or IP of the client that sent the messages.
+</p><blockquote class="blue-grey lighten-4 left-align"><pre>{_info::3}
+</pre></blockquote><p>is the port from which the client sent the messages.
+</pre></blockquote><p>All Handlers must be formatted this way, (They can have a different function name and argument names of course,) but which arguments you actually do anything with is up to you.
+</p><p>That's it!</p>
+      </div>
+    </div>
+    <br><br>
+
+    <div class="section">
+
+    </div>
+  </main>
+
+  <footer class="page-footer green darken-1">
+    <div class="container">
+      <div class="row">
+        <div class="col l9 s12">
+          <h5 class="white-text">About</h5>
+          <p class="grey-text text-lighten-4">MundoSK was originally created by Tlatoani to allow Skripters to control Minecraft world borders. Since then, it has grown tremendously to offer a wide array of features that expand the power of Skript.</p>
+
+
+        </div>
+        <div class="col l3 s12">
+          <h5 class="white-text">Useful Links</h5>
+          <ul>
+            <li><a class="white-text" href="http://dev.bukkit.org/bukkit-plugins/skript/">Skript</a></li>
+            <li><a class="white-text" href="http://skunity.com/">skUnity</a></li>
+            <li><a class="white-text" href="http://dev.bukkit.org/bukkit-plugins/skquery/">SkQuery</a></li>
+            <li><a class="white-text" href="https://www.spigotmc.org/resources/terraincontrol.2214/">TerrainControl</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+      Built using <a class="cyan-text text-lighten-3" href="http://materializecss.com">Materialize</a>
+      </div>
+    </div>
+  </footer>
+
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="js/materialize.js"></script>
+  <script src="js/init.js"></script>
+
+  </body>
+</html>

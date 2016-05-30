@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>MundoSK - Skript Addon by Tlatoani</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+<body>
+  <nav class="blue darken-1" role="navigation">
+    <div class="nav-wrapper"><a id="logo-container" href="index.html" class="brand-logo center white-text">MundoSK</a>
+      <ul id="nav-mobile" class="side-nav fixed blue darken-2">
+        <li class="no-padding">
+          <ul class="collapsible collapsible-accordion">
+            <li>
+              <a class="collapsible-header white-text">Tutorials</i></a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="tutorialworldcreator.html">World Creator</a></li>
+                  <li><a href="tutorialinterserver.html">Server Communication</a></li>
+                  <li><a href="tutorialhandlers.html">Handlers</a></li>
+                  <li><a href="tutorialprobability.html">Probability</a></li>
+                  <li><a href="tutorialcustomevents.html">Custom Events</a></li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <a class="collapsible-header white-text">Requirements</i></a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="https://forums.skunity.com/uploads/default/original/2X/a/af5cf8410e58cce7f76c8fc467498b32c37e2755.jar">Skript 2.2 (1.8)</a></li>
+                  <li><a href="https://forums.skunity.com/t/download-v1-3-skript-for-1-9/4283">Skript 2.2 (1.9)</a></li>
+                  <li><a>Spigot 1.8/1.9</a></li>
+                  <li><a>Java 8</a></li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <a class="active collapsible-header white-text">Examples</i></a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="exampleinterserverchat.html">Inter Server Chat</a></li>
+                  <li class="active grey lighten-3"><a href="examplemontyhall.html" class="black-text">Monty Hall</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </li>
+        <li><a href="http://skunity.com/MundoSK" class="white-text">Documentation</a></li>
+        <li><a href="https://github.com/TlatoaniHJ/MundoSK" class="white-text">GitHub</a></li>
+        <li><a href="https://forums.skunity.com/t/mundosk-1-5-10-custom-events-world-border-world-management-books-enchanted-books-sockets-terraincontrol-hook-more/2706" class="white-text">skUnity</a></li>
+        <li><a href="http://mcstats.org/plugin/MundoSK" class="white-text">Metrics</a></li>
+        <li><a href="reportbugs.html" class="white-text">Report Bugs</a></li>
+      </ul>
+      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons white-text">menu</i></a>
+    </div>
+  </nav>
+
+  <header id="index-banner" class="parallax-container">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <br><br>
+        <h1 class="header center green-text">Monty Hall Example</h1>
+        <div class="row center">
+          <h5 class="header col s12 light">Demonstrates what you can do with advanced probability</h5>
+        </div>
+      </div>
+    </div>
+    <div class="parallax"><img src="background4.jpg" alt="Unsplashed background img 1"></div>
+  </header>
+
+
+  <main>
+    <div class="section container">
+
+      <!--   Icon Section   -->
+      <div class="center row">
+<p>I was bored, so I decided to make a Monty Hall command.
+</p><p>For those of you who don't know about the Monty Hall problem:
+</p><blockquote class="blue-grey lighten-4 left-align">Suppose you're on a game show, and you're given the choice of three doors: Behind one door is a car; behind the others, goats. You pick a door, say No. 1, and the host, who knows what's behind the doors, opens another door, say No. 3, which has a goat. He then says to you, "Do you want to pick door No. 2?" Is it to your advantage to switch your choice?
+</blockquote><p>If you want to actually try the problem first, I'll put the answer and the rest of this example in a spoiler box.
+</p><ul class="collapsible popout collapsible-accordion">
+  <li>
+    <a class="collapsible-header">Open when you're ready</i></a>
+    <div class="collapsible-body">
+<p>The answer is that it is to your advantage to switch. To demonstrate this, I decided to make a little script using my probability stuff:
+</p><blockquote class="blue-grey lighten-4 left-align"><pre>
+command /montyhall <integer>:
+  trigger:
+    set {_teslas} to 0
+    set {_sheeps} to 0
+    set {_games} to 0
+    loop integer-arg times:
+      set {_1} to "sheep"
+      set {_2} to "sheep"
+      set {_3} to "sheep"
+      $ scope
+      probability:
+        1 prob:
+          set {_1} to "your new tesla"
+        1 prob:
+          set {_2} to "your new tesla"
+        1 prob:
+          set {_3} to "your new tesla"
+      $ scope
+      probability:
+        1 prob:
+          set {_choice} to 1
+          if {_2} is "sheep":
+            set {_elim} to 2
+          else:
+            set {_elim} to 3
+        1 prob:
+          set {_choice} to 2
+          if {_1} is "sheep":
+            set {_elim} to 1
+          else:
+            set {_elim} to 3
+        1 prob:
+          set {_choice} to 3
+          if {_2} is "sheep":
+            set {_elim} to 2
+          else:
+            set {_elim} to 1
+      broadcast "You have chosen door %{_choice}%!"
+      broadcast "Door %{_elim}% is a sheep and has been eliminated!"
+      broadcast "Would you like to switch?"
+      set {_finalchoice} to 6 - ({_choice} + {_elim})
+      broadcast "You switched to %{_finalchoice}%"
+      if {_%{_finalchoice}%} is "your new tesla":
+        broadcast "Congratulations! You won a new Tesla!"
+        add 1 to {_teslas}
+      else:
+        broadcast "Hey, you get a sheep!"
+        add 1 to {_sheeps}
+      add 1 to {_games}
+    broadcast "You played %{_games}% games today"
+    broadcast "You won %{_teslas}% Teslas, and %{_sheeps}% sheep"
+</pre></blockquote><p>Essentially, when you do the command, you repeat an instance of the game the amount of times specified in integer-arg. Every single time you choose to switch. Every time it runs an instance of the game, it broadcasts dialogue, so beware that if you run this like 50 times, it's gonna spam your chat like crazy. At the end, it tells you how many games you played, how many Teslas (cars) you won, and how many sheep (goats) you won.
+</p><p>For more info about the Monty Hall problem, go <a href="https://en.wikipedia.org/wiki/Monty_Hall_problem">here</a>.</p>
+    </div>
+  </li>
+</ul>
+      </div>
+    </div>
+    <br><br>
+
+    <div class="section">
+
+    </div>
+  </main>
+
+  <footer class="page-footer green darken-1">
+    <div class="container">
+      <div class="row">
+        <div class="col l9 s12">
+          <h5 class="white-text">About</h5>
+          <p class="grey-text text-lighten-4">MundoSK was originally created by Tlatoani to allow Skripters to control Minecraft world borders. Since then, it has grown tremendously to offer a wide array of features that expand the power of Skript.</p>
+
+
+        </div>
+        <div class="col l3 s12">
+          <h5 class="white-text">Useful Links</h5>
+          <ul>
+            <li><a class="white-text" href="http://dev.bukkit.org/bukkit-plugins/skript/">Skript</a></li>
+            <li><a class="white-text" href="http://skunity.com/">skUnity</a></li>
+            <li><a class="white-text" href="http://dev.bukkit.org/bukkit-plugins/skquery/">SkQuery</a></li>
+            <li><a class="white-text" href="https://www.spigotmc.org/resources/terraincontrol.2214/">TerrainControl</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+      Built using <a class="cyan-text text-lighten-3" href="http://materializecss.com">Materialize</a>
+      </div>
+    </div>
+  </footer>
+
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="js/materialize.js"></script>
+  <script src="js/init.js"></script>
+
+  </body>
+</html>

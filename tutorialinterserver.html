@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>MundoSK - Skript Addon by Tlatoani</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+<body>
+  <nav class="blue darken-1" role="navigation">
+    <div class="nav-wrapper"><a id="logo-container" href="index.html" class="brand-logo center white-text">MundoSK</a>
+      <ul id="nav-mobile" class="side-nav fixed blue darken-2">
+        <li class="no-padding">
+          <ul class="collapsible collapsible-accordion">
+            <li>
+              <a class="active collapsible-header white-text">Tutorials</i></a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="tutorialworldcreator.html">World Creator</a></li>
+                  <li class="active grey lighten-3"><a href="tutorialinterserver.html" class="black-text">Server Communication</a></li>
+                  <li><a href="tutorialhandlers.html">Handlers</a></li>
+                  <li><a href="tutorialprobability.html">Probability</a></li>
+                  <li><a href="tutorialcustomevents.html">Custom Events</a></li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <a class="collapsible-header white-text">Requirements</i></a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="https://forums.skunity.com/uploads/default/original/2X/a/af5cf8410e58cce7f76c8fc467498b32c37e2755.jar">Skript 2.2 (1.8)</a></li>
+                  <li><a href="https://forums.skunity.com/t/download-v1-3-skript-for-1-9/4283">Skript 2.2 (1.9)</a></li>
+                  <li><a>Spigot 1.8/1.9</a></li>
+                  <li><a>Java 8</a></li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <a class="collapsible-header white-text">Examples</i></a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="exampleinterserverchat.html">Inter Server Chat</a></li>
+                  <li><a href="examplemontyhall.html">Monty Hall</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </li>
+        <li><a href="http://skunity.com/MundoSK" class="white-text">Documentation</a></li>
+        <li><a href="https://github.com/TlatoaniHJ/MundoSK" class="white-text">GitHub</a></li>
+        <li><a href="https://forums.skunity.com/t/mundosk-1-5-10-custom-events-world-border-world-management-books-enchanted-books-sockets-terraincontrol-hook-more/2706" class="white-text">skUnity</a></li>
+        <li><a href="http://mcstats.org/plugin/MundoSK" class="white-text">Metrics</a></li>
+        <li><a href="reportbugs.html" class="white-text">Report Bugs</a></li>
+      </ul>
+      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons white-text">menu</i></a>
+    </div>
+  </nav>
+
+  <header id="index-banner" class="parallax-container">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <br><br>
+        <h1 class="header center green-text">Server Communication Tutorial</h1>
+        <div class="row center">
+          <h5 class="header col s12 light">Allow multiple servers to communicate with each other</h5>
+        </div>
+      </div>
+    </div>
+    <div class="parallax"><img src="background4.jpg" alt="Unsplashed background img 1"></div>
+  </header>
+
+
+  <main>
+    <div class="section container">
+
+      <!--   Icon Section   -->
+      <div class="center row">
+        <p>This is a simple tutorial showing you how you can use sockets to communicate with another server.</p>
+        <p>First, both servers need to have MundoSK.</p>
+        <p>Next, you need to open a function socket on one of the servers.</p>
+        <blockquote class="blue-grey lighten-4 left-align"><pre>open function socket at port %integer% with password "awesomepassword" through function "Handler"</pre></blockquote>
+        <p>Make sure both servers know each others' password.</p>
+        <p>Now you need the handler. For the full details on how to write the handlers see the Handlers tutorial, here we'll just put the finished one here:</p>
+        <p>Function Socket Handler:</p>
+        <blockquote class="blue-grey lighten-4 left-align"><pre>
+function Handler(args: strings, info: objects):
+  do stuff
+  set {_value} to something
+  return {_value}</pre></blockquote>
+        <p>Response Handler:</p>
+        <blockquote class="blue-grey lighten-4 left-align"><pre>
+function ResponseHandler(args: strings, info: objects):
+  do stuff
+  set {_value} to something
+  write "awesomepassword", {_value} to socket with host "other server's ip" port %integer% to handle response through function "ResponseHandler" with id "someid"</pre></blockquote>
+        <p>The important part here is that last line, that writes back to the server after handling the response.</p>
+        <p>Now, to get it started, the server that writes the messages and has the Response Handler has to run that last line seperately to get it started:</p>
+        <blockquote class="blue-grey lighten-4 left-align"><pre>write "awesomepassword", "some value" to socket with host "other server's ip" port %integer% to handle response through function "ResponseHandler with id "someid"</pre></blockquote>
+        <p>Once that happens, the server with the function socket open handles the message through the Function Handler Socket and sreturns a response, which is when the Response Handler handles the response and sends a new message, repeating the cycle.</p>
+        <p>And that's it! What you do can go far beyond that, doing many different things, opening function sockets on both servers.</p>
+      </div>
+    </div>
+    <br><br>
+
+    <div class="section">
+
+    </div>
+  </main>
+
+  <footer class="page-footer green darken-1">
+    <div class="container">
+      <div class="row">
+        <div class="col l9 s12">
+          <h5 class="white-text">About</h5>
+          <p class="grey-text text-lighten-4">MundoSK was originally created by Tlatoani to allow Skripters to control Minecraft world borders. Since then, it has grown tremendously to offer a wide array of features that expand the power of Skript.</p>
+
+
+        </div>
+        <div class="col l3 s12">
+          <h5 class="white-text">Useful Links</h5>
+          <ul>
+            <li><a class="white-text" href="http://dev.bukkit.org/bukkit-plugins/skript/">Skript</a></li>
+            <li><a class="white-text" href="http://skunity.com/">skUnity</a></li>
+            <li><a class="white-text" href="http://dev.bukkit.org/bukkit-plugins/skquery/">SkQuery</a></li>
+            <li><a class="white-text" href="https://www.spigotmc.org/resources/terraincontrol.2214/">TerrainControl</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+      Built using <a class="cyan-text text-lighten-3" href="http://materializecss.com">Materialize</a>
+      </div>
+    </div>
+  </footer>
+
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="js/materialize.js"></script>
+  <script src="js/init.js"></script>
+
+  </body>
+</html>

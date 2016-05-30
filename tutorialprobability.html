@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>MundoSK - Skript Addon by Tlatoani</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+<body>
+  <nav class="blue darken-1" role="navigation">
+    <div class="nav-wrapper"><a id="logo-container" href="index.html" class="brand-logo center white-text">MundoSK</a>
+      <ul id="nav-mobile" class="side-nav fixed blue darken-2">
+        <li class="no-padding">
+          <ul class="collapsible collapsible-accordion">
+            <li>
+              <a class="active collapsible-header white-text">Tutorials</i></a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="tutorialworldcreator.html">World Creator</a></li>
+                  <li><a href="tutorialinterserver.html">Server Communication</a></li>
+                  <li><a href="tutorialhandlers.html">Handlers</a></li>
+                  <li class="active grey lighten-3"><a href="tutorialprobability.html" class="black-text">Probability</a></li>
+                  <li><a href="tutorialcustomevents.html">Custom Events</a></li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <a class="collapsible-header white-text">Requirements</i></a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="https://forums.skunity.com/uploads/default/original/2X/a/af5cf8410e58cce7f76c8fc467498b32c37e2755.jar">Skript 2.2 (1.8)</a></li>
+                  <li><a href="https://forums.skunity.com/t/download-v1-3-skript-for-1-9/4283">Skript 2.2 (1.9)</a></li>
+                  <li><a>Spigot 1.8/1.9</a></li>
+                  <li><a>Java 8</a></li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <a class="collapsible-header white-text">Examples</i></a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="exampleinterserverchat.html">Inter Server Chat</a></li>
+                  <li><a href="examplemontyhall.html">Monty Hall</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </li>
+        <li><a href="http://skunity.com/MundoSK" class="white-text">Documentation</a></li>
+        <li><a href="https://github.com/TlatoaniHJ/MundoSK" class="white-text">GitHub</a></li>
+        <li><a href="https://forums.skunity.com/t/mundosk-1-5-10-custom-events-world-border-world-management-books-enchanted-books-sockets-terraincontrol-hook-more/2706" class="white-text">skUnity</a></li>
+        <li><a href="http://mcstats.org/plugin/MundoSK" class="white-text">Metrics</a></li>
+        <li><a href="reportbugs.html" class="white-text">Report Bugs</a></li>
+      </ul>
+      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons white-text">menu</i></a>
+    </div>
+  </nav>
+
+  <header id="index-banner" class="parallax-container">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <br><br>
+        <h1 class="header center green-text">Probability Tutorial</h1>
+        <div class="row center">
+          <h5 class="header col s12 light">Allows you to use chance dynamically</h5>
+        </div>
+      </div>
+    </div>
+    <div class="parallax"><img src="background4.jpg" alt="Unsplashed background img 1"></div>
+  </header>
+
+
+  <main>
+    <div class="section container">
+
+      <!--   Icon Section   -->
+      <div class="center row">
+<p>Let's say you have 6 items in a chest. One diamond, two wood, and three dirt. You pick one randomly out of the bag. What likelihood is it that you picked a diamond? 1/6, because there was only one diamond in the bag out of 6 total items.
+</p><p>We can use probability in Skript to have certain cases, some of which are likely, some of which are rare. The case that is chosen is picked randomly, but is more likely to be a blue bean than a red bean.
+</p><p>The first way we can do this using MundoSK is a probability scope. A probability scope is written like this:
+</p><blockquote class="blue-grey lighten-4 left-align"><pre>
+$ scope
+probability:
+ 1 prob: #This is our diamond
+  set {_item} to 1 of diamond
+ 2 prob: #This is our wood
+  set {_item} to 1 of dark oak log
+ 3 prob: #This is our dirt
+  set {_item} to 1 of dirt
+</pre></blockquote><p>Pretty simple, right? The diamond has 1/6 chance of being chosen, the wood 2/6 or 1/3, and the dirt 3/6 or 1/2. You can just do this if you want, but you can also go farther.
+</p><p>Let's say if the probability chooses a diamond or a wood, you want to add in a broadcast of "Lucky, avoided the dirt." . You can actually do that really easily.
+</p><blockquote class="blue-grey lighten-4 left-align"><pre>
+$ scope
+probability:
+ 1 prob: #This is our diamond
+  set {_item} to 1 of diamond
+ 2 prob: #This is our wood
+  set {_item} to 1 of dark oak log
+ broadcast "Lucky, avoided the dirt."
+ 3 prob: #This is our dirt
+  set {_item} to 1 of dirt
+</pre></blockquote><p>The broadcast runs if the diamond or the wood was chosen, but not if the dirt was chosen, because the dirt came after the broadcast. Now, what if instead of that broadcast, you wanted a broadcast "No diamonds today" that only ran if a wood or a dirt was chosen?
+</p><blockquote class="blue-grey lighten-4 left-align"><pre>
+$ scope
+probability:
+ 1 prob: #This is our diamond
+  set {_item} to 1 of diamond
+ false
+ 2 prob: #This is our wood
+  set {_item} to 1 of dark oak log
+ 3 prob: #This is our dirt
+  set {_item} to 1 of dirt
+ broadcast "No diamonds today."
+</pre></blockquote><p>You see that false? That false stops the rest of the probability scope from running if the diamond was chosen and returns to whatever came after the probability scope.
+</p><p>Pretty cool, but what if you wanted to have a probability for every item? It would be ridiculous to write in every item.
+</p><p>That's what our next probability expression is for. Say you create a list variable, and you set a probability for each item, like
+</p><blockquote class="blue-grey lighten-4 left-align"><pre>
+{chance::diamond} = 2
+{chance::wood} = 40
+{chance::dirt} = 100
+</pre></blockquote><p>And all the rest of the items too. Now what? Luckily, there is a very simple expression for that:
+</p><blockquote class="blue-grey lighten-4 left-align"><pre>random from {chance::*} probs
+</pre></blockquote><p>This amazing expression chooses an item name based on the probabilities in the list variable. Mind blown. This means you can change the probabilities or even get a fancy list of all the probabilities or a specific probability quite easily.
+</p><p>You can also use this to make a simple lottery, like this:
+</p><blockquote class="blue-grey lighten-4 left-align"><pre>
+command /lotterypay <number>:
+ permission: lottery.pay
+ trigger:
+  if {lottery::%player%} is not set:
+   set {lottery::%player%} to 0
+  add number-arg to {lottery::%player%}
+  subtract number-arg from player's balance
+  message "You added %number-arg% to the lottery!"
+
+command /lotteryaward:
+ permission: lottery.admin
+ trigger:
+  set {_winner} to random from {lottery::%player%} probs parsed as a player
+  broadcast "&6%{_winner}% won the lottery!!! They get %sum of {lottery::*}% money!!!"
+  add sum of {lottery::*} to {_winner}'s balance
+  clear {lottery::*}
+</pre></blockquote><p>Bam. Lottery.
+</p><p>There is a final expression, almost the same to the one shown above.
+</p><p>Say you have something that isn't a list variable, like a literal list such as 1, 2, 3, 4, 5 or an expression that returns a list of numbers. In this case, it's preferable to use an expression that returns a number that is the index of the list rather than a string, as would be the case with the list variable examples shown above.
+</p><blockquote class="blue-grey lighten-4 left-align"><pre>random number from integers from 1 to 10 probs
+</pre></blockquote><p>The above example gives each number 1 to 10 a chance based on their number. Ex. 1 would have 1/55 chance, 5 would have 5/55 chance, etc.
+</p><p>You can also change the probabilities like this:
+</p><blockquote class="blue-grey lighten-4 left-align"><pre>random number from 1, 1, 2, 3, 5, 8, 13 probs
+</pre></blockquote><p>So that the probabilities are a bit more complicated, 1 will have a 1/33 chance, same for 2, 3 will have 2/33, so on until 7 which has a 13/33 chance.
+</p><p>You can also do this with list variables that have number indeces (string indeces would be converted to number indeces alphabetically) It would essentially work the same way as the earlier example with list variables, except it would return a number.
+</p>
+      </div>
+    </div>
+    <br><br>
+
+    <div class="section">
+
+    </div>
+  </main>
+
+  <footer class="page-footer green darken-1">
+    <div class="container">
+      <div class="row">
+        <div class="col l9 s12">
+          <h5 class="white-text">About</h5>
+          <p class="grey-text text-lighten-4">MundoSK was originally created by Tlatoani to allow Skripters to control Minecraft world borders. Since then, it has grown tremendously to offer a wide array of features that expand the power of Skript.</p>
+
+
+        </div>
+        <div class="col l3 s12">
+          <h5 class="white-text">Useful Links</h5>
+          <ul>
+            <li><a class="white-text" href="http://dev.bukkit.org/bukkit-plugins/skript/">Skript</a></li>
+            <li><a class="white-text" href="http://skunity.com/">skUnity</a></li>
+            <li><a class="white-text" href="http://dev.bukkit.org/bukkit-plugins/skquery/">SkQuery</a></li>
+            <li><a class="white-text" href="https://www.spigotmc.org/resources/terraincontrol.2214/">TerrainControl</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+      Built using <a class="cyan-text text-lighten-3" href="http://materializecss.com">Materialize</a>
+      </div>
+    </div>
+  </footer>
+
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="js/materialize.js"></script>
+  <script src="js/init.js"></script>
+
+  </body>
+</html>

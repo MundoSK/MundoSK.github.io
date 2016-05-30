@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>MundoSK - Skript Addon by Tlatoani</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+<body>
+  <nav class="blue darken-1" role="navigation">
+    <div class="nav-wrapper"><a id="logo-container" href="index.html" class="brand-logo center white-text">MundoSK</a>
+      <ul id="nav-mobile" class="side-nav fixed blue darken-2">
+        <li class="no-padding">
+          <ul class="collapsible collapsible-accordion">
+            <li>
+              <a class="collapsible-header white-text">Tutorials</i></a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="tutorialworldcreator.html">World Creator</a></li>
+                  <li><a href="tutorialinterserver.html">Server Communication</a></li>
+                  <li><a href="tutorialhandlers.html">Handlers</a></li>
+                  <li><a href="tutorialprobability.html">Probability</a></li>
+                  <li><a href="tutorialcustomevents.html">Custom Events</a></li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <a class="collapsible-header white-text">Requirements</i></a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="https://forums.skunity.com/uploads/default/original/2X/a/af5cf8410e58cce7f76c8fc467498b32c37e2755.jar">Skript 2.2 (1.8)</a></li>
+                  <li><a href="https://forums.skunity.com/t/download-v1-3-skript-for-1-9/4283">Skript 2.2 (1.9)</a></li>
+                  <li><a>Spigot 1.8/1.9</a></li>
+                  <li><a>Java 8</a></li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <a class="active collapsible-header white-text">Examples</i></a>
+              <div class="collapsible-body">
+                <ul>
+                  <li class="active grey lighten-3"><a href="exampleinterserverchat.html" class="black-text">Inter Server Chat</a></li>
+                  <li><a href="examplemontyhall.html">Monty Hall</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </li>
+        <li><a href="http://skunity.com/MundoSK" class="white-text">Documentation</a></li>
+        <li><a href="https://github.com/TlatoaniHJ/MundoSK" class="white-text">GitHub</a></li>
+        <li><a href="https://forums.skunity.com/t/mundosk-1-5-10-custom-events-world-border-world-management-books-enchanted-books-sockets-terraincontrol-hook-more/2706" class="white-text">skUnity</a></li>
+        <li><a href="http://mcstats.org/plugin/MundoSK" class="white-text">Metrics</a></li>
+        <li><a href="reportbugs.html" class="white-text">Report Bugs</a></li>
+      </ul>
+      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons white-text">menu</i></a>
+    </div>
+  </nav>
+
+  <header id="index-banner" class="parallax-container">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <br><br>
+        <h1 class="header center green-text">Inter Server Chat Example</h1>
+        <div class="row center">
+          <h5 class="header col s12 light">Demonstrates what you can do with sockets</h5>
+        </div>
+      </div>
+    </div>
+    <div class="parallax"><img src="background4.jpg" alt="Unsplashed background img 1"></div>
+  </header>
+
+
+  <main>
+    <div class="section container">
+
+      <!--   Icon Section   -->
+      <div class="center row">
+<p>To demonstrate the capabilities of sockets in MundoSK, I decided to make a simple script.
+</p><p>What this script does is combine the chats of two servers. When a player on one server sends a chat message, all players on both servers see it.
+</p><p>The script has two parts: One is the "hub" script, which goes on one server, whose host and port is known to all other servers. The other is the "other server" script, which goes on the other servers.
+</p><p>Hub Script:
+</p><blockquote class="blue-grey lighten-4 left-align"><pre>
+on server start:
+  set {GlobalChatEnabled} to false
+
+function GlobalChatMessageSender(player: string, msg: string):
+  set {_message} to "<%{_player}%>: %{_msg}%"
+  broadcast {_message}
+  loop {GlobalChatServers::*}:
+    write "password", "globalchat", and {_message} to socket with host loop-index port loop-value
+
+function GlobalChatMessageReceiver(msg: strings, info: objects):
+  if {_msg::1} is "globalchat":
+    GlobalChatMessageSender({_msg::2}, {_msg::3})
+  else if {_msg::1} is "addserver":
+    set {GlobalChatServers::%{_info::2}%} to {_msg::2} parsed as a number
+
+on chat:
+  if {GlobalChatEnabled} is true:
+    cancel event
+    GlobalChatMessageSender("%player%", message)
+
+command /enableglobalchat:
+  trigger:
+    set {GlobalChatEnabled} to true
+    open function socket at port 25000 with password "password" through function "GlobalChatMessageReceiver"
+    broadcast "&2Global Chat Enabled!"
+</pre></blockquote><p>Other Server Script:
+</p><blockquote class="blue-grey lighten-4 left-align"><pre>
+on server start:
+  set {GlobalChatEnabled} to false
+
+command /enableglobalchat:
+  trigger:
+    set {GlobalChatEnabled} to true
+    open function socket at port 25001 with password "password" through function "GlobalChatBroadcaster"
+    write "password", "addserver", and "25001" to socket with host "localhost" port 25000
+    broadcast "Global Chat Enabled!"
+
+function GlobalChatBroadcaster(msg: strings, info: objects):
+  if {_msg::1} is "globalchat":
+    broadcast "%{_msg::2}%"
+
+on chat:
+  if {GlobalChatEnabled} is true:
+    cancel event
+    write "password", "globalchat", "%player%", and "%message%" to socket with host "localhost" port 25000
+</pre></blockquote><p>Here's how the script works:
+</p><p>First, you execute the /enableglobalchat on the hub server. This opens the function socket and broadcasts a fun message. Then, you do the same command on the other servers. This opens a function socket on each of those individual servers, then writes to the hub server with the port of their function socket, which the hub server records in a list variable.
+</p><p>/enableglobalchat also sets to true a variable that allows players' chats to be globalchatted. Once global chat is enabled, whenever a player chats on the hub server, the event is cancelled and both the player and the message are sent to a function which converts the player and the message into a full message, broadcasts it on the hub server, and loops the aformentioned list variable, writing the message to each other server, which then broadcast the message.
+</p><p>The same thing happens with the other servers when a player chats, except they first have to write the player and the message to the hub server's function socket.
+</p><p>This script shows the bare minimum of what can be done with MundoSK sockets. You could have a private message system, a reply system, an auction system, or even more over multiple servers. The possibilities are endless.</p>
+      </div>
+    </div>
+    <br><br>
+
+    <div class="section">
+
+    </div>
+  </main>
+
+  <footer class="page-footer green darken-1">
+    <div class="container">
+      <div class="row">
+        <div class="col l9 s12">
+          <h5 class="white-text">About</h5>
+          <p class="grey-text text-lighten-4">MundoSK was originally created by Tlatoani to allow Skripters to control Minecraft world borders. Since then, it has grown tremendously to offer a wide array of features that expand the power of Skript.</p>
+
+
+        </div>
+        <div class="col l3 s12">
+          <h5 class="white-text">Useful Links</h5>
+          <ul>
+            <li><a class="white-text" href="http://dev.bukkit.org/bukkit-plugins/skript/">Skript</a></li>
+            <li><a class="white-text" href="http://skunity.com/">skUnity</a></li>
+            <li><a class="white-text" href="http://dev.bukkit.org/bukkit-plugins/skquery/">SkQuery</a></li>
+            <li><a class="white-text" href="https://www.spigotmc.org/resources/terraincontrol.2214/">TerrainControl</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+      Built using <a class="cyan-text text-lighten-3" href="http://materializecss.com">Materialize</a>
+      </div>
+    </div>
+  </footer>
+
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="js/materialize.js"></script>
+  <script src="js/init.js"></script>
+
+  </body>
+</html>
